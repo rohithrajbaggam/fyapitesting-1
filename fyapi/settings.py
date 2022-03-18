@@ -37,14 +37,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
     'pages.apps.PagesConfig',
     'users.apps.UsersConfig',
+    'userapp.apps.UserappConfig',
+
     'djoser',
     'rest_framework',
-    'userapp.apps.UserappConfig',
+    "corsheaders",
 ] 
 
 MIDDLEWARE = [
+
+    "corsheaders.middleware.CorsMiddleware",
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -165,3 +171,11 @@ SIMPLE_JWT = {
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# CORS_ALLOWED_ORIGINS = [
+#     "https://example.com",
+#     "https://sub.example.com",
+#     "http://localhost:8080",
+#     "http://127.0.0.1:9000",
+# ]
+
+CORS_ALLOW_ALL_ORIGINS = True
