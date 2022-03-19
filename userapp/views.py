@@ -12,7 +12,7 @@ from .permissions import IsAuthorOrReadOnly, IsUserProfileorReadOnly
 class UserProfileViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-    permission_classes = [IsUserProfileorReadOnly]
+    permission_classes = [IsUserProfileorReadOnly, IsAuthenticated]
 
 
     @action(detail=False, methods=['GET', 'PUT']) # we can add permission classes as another argument  # if detail is True models.object.get type detailview ? False models.object.all listview
@@ -46,7 +46,7 @@ def post_list_view(request):
 class UserPostViewSet(CreateModelMixin, RetrieveModelMixin, UpdateModelMixin, GenericViewSet):
     queryset = Post.objects.all()
     serializer_class = UserPostSerializer
-    permission_classes = [IsAuthorOrReadOnly]
+    permission_classes = [IsAuthorOrReadOnly, IsAuthenticated]
     
     @action(detail=False, methods=['GET', 'PUT'])
     def me(self, request):

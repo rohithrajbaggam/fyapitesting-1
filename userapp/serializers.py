@@ -1,4 +1,3 @@
-from pickletools import read_long1
 from .models import UserProfile, Post
 from rest_framework import serializers
 

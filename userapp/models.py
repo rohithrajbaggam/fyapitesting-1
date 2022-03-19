@@ -65,7 +65,7 @@ class UserProfile(models.Model):
         ('2021', '2021'),
     ]
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
-    profile_pic = models.ImageField(upload_to='profile_pics', blank=True, default='profile_default.jpeg')
+    profile_pic = models.ImageField(upload_to='profile_pics', blank=True, default='user_profile_default.png')
     dob = models.DateField(blank=True, null=True)
     full_name = models.CharField(max_length=55)
     Section     = models.CharField(max_length=100, blank=True)

@@ -1,4 +1,3 @@
-from cgitb import lookup
 from django.urls import path, include
 from . import views
 from rest_framework_nested import routers
@@ -13,7 +12,7 @@ router.register('posts', views.UserPostViewSet) # parent router
 # userposts.register('posts', views.UserPostViewSet, basename='user-posts')
 
 
-
+ 
 urlpatterns = [ 
     path('post-list/', views.post_list_view)
 ] + router.urls 
