@@ -1,69 +1,9 @@
-from distutils.command.upload import upload
+from .choices import Hosteler_or_DayScholar_Choices, Branch_Choice, year, state_choices
 from django.db import models
 from django.contrib.auth.models import User
 
 # Create your models here.
 class UserProfile(models.Model):
-    Hosteler_or_DayScholar_Choices = [
-    (None, 'None'),
-    ('Home', 'Day Scholar'),
-    ('Pg', 'Pg'),
-    ('Shukuna 1', 'Shukuna 1'),
-    ('Shukuna 2', 'Shukuna 2'),
-    ('Govind 1', 'Govind 1'),
-    ('Govind 2', 'Govind 2'),
-    ('LC1', 'NC 1'),
-    ('LC2', 'NC 2'),
-    ('LC3', 'NC 3'),
-    ('LC4', 'NC 4'),
-    ('NC1', 'NC 1'),
-    ('NC2', 'NC 2'),
-    ('NC3', 'NC 3'),
-    ('NC4', 'NC 4'),
-    ('NC5', 'NC 5'),
-    ('NC6', 'NC 6'),
-    ('Tagore', 'Tagore'),
-    ('Zakir A', 'Zakir A'),
-    ('Zakir B', 'Zakir B'),
-    ]
-    Branch_Choice = [ 
-        ('Bachelor of Computer Science Engineering', 'Bachelor of Computer Science Engineering'),
-        ('Mechanical Engineering', 'Mechanical Engineering'),
-        ('Electrical and Electronics Engineering', 'Electrical and Electronics Engineering'),
-        ('Electronics and Communications Engineering', 'Electronics and Communications Engineering'),
-        ('Aerospace Engineering', 'Aerospace Engineering'),
-        ('Aeronautical Engineering', 'Aeronautical Engineering'),
-        ('Bachelor of Business Administration', 'Bachelor of Business Administration'),
-        ('Master of Business Administration', 'Master of Business Administration'),
-        ('Hotel Management', 'Hotel Management'),
-        ('Agricultural Science', 'Agricultural Science'),
-        ('Biotechonology', 'Biotechonology'),
-        ('Chemical Engineering', 'Chemical Engineering'),
-        ('Fashion Techonology', 'Fashion Techonology'),
-        ('Master of Business Administration', 'Master of Business Administration'),
-        (None, 'None'),
-    ]
-    state_choices = [("Andhra Pradesh","Andhra Pradesh"),("Arunachal Pradesh ","Arunachal Pradesh"),("Assam","Assam"),("Bihar","Bihar"),
-    ("Chhattisgarh","Chhattisgarh"),("Goa","Goa"),("Gujarat","Gujarat"),("Haryana","Haryana"),("Himachal Pradesh","Himachal Pradesh"),
-    ("Jammu and Kashmir ","Jammu and Kashmir "),("Jharkhand","Jharkhand"),("Karnataka","Karnataka"),("Kerala","Kerala"),(
-        "Madhya Pradesh","Madhya Pradesh"),("Maharashtra","Maharashtra"),("Manipur","Manipur"),("Meghalaya","Meghalaya"),
-        ("Mizoram","Mizoram"),("Nagaland","Nagaland"),("Odisha","Odisha"),("Punjab","Punjab"),("Rajasthan","Rajasthan"),
-        ("Sikkim","Sikkim"),("Tamil Nadu","Tamil Nadu"),("Telangana","Telangana"),("Tripura","Tripura"),("Uttar Pradesh","Uttar Pradesh"),
-        ("Uttarakhand","Uttarakhand"),("West Bengal","West Bengal"),("Andaman and Nicobar Islands","Andaman and Nicobar Islands"),(
-            "Chandigarh","Chandigarh"),("Dadra and Nagar Haveli","Dadra and Nagar Haveli"),("Daman and Diu","Daman and Diu"),
-            ("Lakshadweep","Lakshadweep"),("National Capital Territory of Delhi","National Capital Territory of Delhi"),("Puducherry","Puducherry")]
-    year = [  
-        ('2012', '2012'),
-        ('2013', '2013'),
-        ('2014', '2014'),
-        ('2015', '2015'),
-        ('2016', '2016'),
-        ('2017', '2017'),
-        ('2018', '2018'),
-        ('2019', '2019'),
-        ('2020', '2020'),
-        ('2021', '2021'),
-    ]
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='user_profile')
     profile_pic = models.ImageField(upload_to='profile_pics', blank=True, default='user_profile_default.png')
     dob = models.DateField(blank=True, null=True)
@@ -102,4 +42,48 @@ class Post(models.Model):
     updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.author}'
+        return f'{self.title[:10]} by {self.author}'
+
+
+class Message(models.Model):
+    req_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='msg_req_user') # me or login user
+    other_user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='msg_other_user') # frnd
+    msg = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+
+    
+    def __str__(self):
+        return f'{self.req_user} to {self.other_user}'
+
+
+class Like(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    # like = models.BooleanField(default=False)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.post} Liked by {self.user}'
+
+
+class CommentPost(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='comment_post')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comment_user')
+    comment_data = models.TextField()
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.post.title} by {self.user}'
+
+class FollowUser(models.Model):
+    follower = models.ForeignKey(User, on_delete=models.CASCADE, related_name='follower_user') # people who follows me 
+    following = models.ForeignKey(User, on_delete=models.CASCADE, related_name='following_user') # people I follow
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f'{self.follower} follows {self.following}'
+
+    
